@@ -463,12 +463,7 @@ on boot
     # Change ownership and permission for vibrator
     chown system system /sys/class/timed_output/vibrator/enable
     chmod 0660 /sys/class/timed_output/vibrator/enable
-    chown system system /sys/devices/virtual/timed_output/vibrator/vtg_level
     chmod 0660 /sys/devices/virtual/timed_output/vibrator/vtg_level
-
-    # display color calibration
-    chown system system /sys/devices/platform/kcal_ctrl.0/kcal
-    chown system system /sys/devices/platform/kcal_ctrl.0/kcal_ctrl
 
     # setup trace dir
     mkdir /cache/trace 0777 root shell
@@ -821,7 +816,7 @@ on property:ro.bootmode=mot-charger
     write /sys/devices/system/cpu/cpu3/online 1
     start moto_charge_only_mode
 
-# CM Performance Profiles
+# Misc
 on property:sys.boot_completed=1
     write /sys/block/mmcblk0/queue/scheduler row
     write /sys/module/lpm_levels/enable_low_power/l2 4
@@ -870,28 +865,3 @@ on property:sys.boot_completed=1
     chmod 0664 /sys/devices/system/cpu/cpu2/online
     chmod 0664 /sys/devices/system/cpu/cpu3/online
     start mpdecision
-
-# Powersave
-on property:sys.perf.profile=0
-    start mpdecision
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor powersave
-    write /sys/class/devfreq/fdb00000.qcom,kgsl-3d0/governor powersave
-    write /sys/class/devfreq/qcom,cpubw.63/governor powersave
-
-# Balanced
-on property:sys.perf.profile=1
-    start mpdecision
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor interactive
-    write /sys/class/devfreq/fdb00000.qcom,kgsl-3d0/governor msm-adreno-tz
-    write /sys/class/devfreq/qcom,cpubw.63/governor msm_cpufreq
-
-# High performance
-on property:sys.perf.profile=2
-    stop mpdecision
-    write /sys/devices/system/cpu/cpu0/online 1
-    write /sys/devices/system/cpu/cpu1/online 1
-    write /sys/devices/system/cpu/cpu2/online 1
-    write /sys/devices/system/cpu/cpu3/online 1
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor performance
-    write /sys/class/devfreq/fdb00000.qcom,kgsl-3d0/governor performance
-    write /sys/class/devfreq/qcom,cpubw.63/governor performance
